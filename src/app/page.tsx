@@ -1,17 +1,18 @@
 import { redirect } from "next/navigation";
-import { createClient } from "../utils/supabase/server";
+import { createClient } from "@/utils/supabase/server";
 
-export default async function Home() {
+export default async function RootPage() {
   const supabase = await createClient();
-
   const {
     data: { user },
     error,
   } = await supabase.auth.getUser();
 
-  if (error || !user) {
-    redirect("/login");
+  // If user is authenticated, send them to dashboard
+  if (user && !error) {
+    redirect("/dashboard");
   }
 
-  redirect("/dashboard");
+  // If no user, send to login
+  redirect("/login");
 }
